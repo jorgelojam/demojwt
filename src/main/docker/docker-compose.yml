@@ -1,0 +1,30 @@
+version: '3.6'
+
+services:
+  srvkeycloak:
+    image: jboss/keycloak
+    container_name: srvkeycloak
+    hostname: srvkeycloak
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: DemoAdmin
+    ports:
+      - 8888:8080
+    command: -Dkeycloak.profile.feature.upload_scripts=enabled
+    networks: 
+      - demojwt_net
+
+  srvwildfly:
+    image: jtux/demojwt
+    container_name: srvwildfly
+    hostname: srvwildfly
+    ports:
+      - 8080:8080
+      - 9990:9990
+    networks:
+      - demojwt_net
+    depends_on:
+      - srvkeycloak
+
+networks:
+  demojwt_net:
